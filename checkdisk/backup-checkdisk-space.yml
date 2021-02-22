@@ -1,0 +1,21 @@
+---
+- name: "Play book to free up disk space in all kuberentes nodes"
+  hosts: mmdprod
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: Check the disk space now
+    command: df -kh
+    register: output1
+  - debug: var=output1.stdout_lines
+  - name: Clean the Unused docker resources
+    docker_prune:
+      containers: yes
+      images: yes
+      volumes: yes
+    register: output2
+  - debug: var=output2.stdout_lines  
+  vars:
+    ansible_ssh_private_key_file: "~/.ssh/id_rsa"
+

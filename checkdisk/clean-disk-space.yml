@@ -1,0 +1,28 @@
+---
+- name: "Play book to free up disk space in all kuberentes nodes"
+  hosts: tlzsilab
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: Check the disk space now
+    shell: "df -kh | grep /dev/nvme0n1p1"
+    register: output1
+    ignore_errors: yes
+  - debug: var=output1.stdout_lines
+  - name: Clean the Unused docker container
+    command: docker container prune -f
+  - name:  clean Unused images
+    command: docker volume prune -f 
+  - name: Clean the unsed volume
+    command: docker system prune -f -a
+  - name: clean os Packages
+    command: sudo apt autoremove
+  - name: Clean old logs
+    command: sudo rm -rf /var/log/*.gz
+  - name: check disk space again
+    shell: "df -kh | grep /dev/nvme0n1p1"
+    register: output2
+    ignore_errors: yes
+  - debug: var=output2.stdout_lines  
+

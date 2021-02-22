@@ -1,0 +1,18 @@
+---
+- name: "Play book to free up disk space in all kuberentes nodes"
+  hosts: tlzsilab
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: Check the disk space now
+    shell: "df -kh | grep /dev/nvme"
+    register: output1
+    ignore_errors: yes
+  - debug: var=output1.stdout_lines
+  - name: check memory utilized 
+    shell: "ps aux --sort -rss | head"
+    register: output2
+    ignore_errors: yes
+  - debug: var=output2.stdout_lines  
+

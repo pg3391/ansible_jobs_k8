@@ -1,0 +1,14 @@
+---
+- hosts: mmdqa
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: Check Disk Spaces
+    command: df -kh    
+  - name: Free Disk Space
+    shell: "sh freedisk.sh"
+
+  vars:
+    ansible_ssh_private_key_file: "/home/vagrant/.ssh/id_rsa"
+
